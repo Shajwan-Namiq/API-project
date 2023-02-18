@@ -17,8 +17,11 @@ const promise = fetchProducts();
 promise.then((data) => {
     let htmlCode = ``;
 
-    data.results.map((item, index) => {
-        //Adding condition 
+    //Appling filtering for the people still they are Alive
+    const newItems = data.results.filter((item) => item.status === "Alive");
+    //showing data from a new aray object
+    newItems.map((item) => {
+        //Adding condition
         if (item.episode.length < 25) {
             item.character = "side";
         } else {
@@ -26,12 +29,10 @@ promise.then((data) => {
         }
         //end condition
 
-        if (item.status === "Alive") {
-            //showing data
-            htmlCode =
-                htmlCode +
-                `
-            
+        //showing data
+        htmlCode =
+            htmlCode +
+            `       
       <div class="card">
       <img src=${item.image} alt=${item.name} style="width: 100%" />
             <div class="container">
@@ -47,27 +48,22 @@ promise.then((data) => {
                 ${item.character}
                </div>   
                 
-
-
                 <div class="icon1">
-                <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M523.9 986.4l-19.1-9.5c-16.6-8.3-407.6-207.7-407.6-550.2C97.2 191.4 288.6 0 523.9 0s426.7 191.4 426.7 426.7c0 342.4-390.9 541.8-407.6 550.2l-19.1 9.5z m0-901.1c-188.2 0-341.3 153.1-341.3 341.3 0 250.3 266.8 420.6 341.3 463.4 74.6-42.7 341.3-213.1 341.3-463.4 0-188.1-153.1-341.3-341.3-341.3z" fill="#dcdbdb"></path><path d="M523.9 533.3c-70.6 0-128-57.4-128-128s57.4-128 128-128 128 57.4 128 128-57.5 128-128 128z m0-170.6c-23.5 0-42.7 19.1-42.7 42.7s19.1 42.7 42.7 42.7c23.5 0 42.7-19.1 42.7-42.7s-19.2-42.7-42.7-42.7z" fill="#dcdbdb"></path></g></svg>                ${item.location.name}
+                <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M523.9 986.4l-19.1-9.5c-16.6-8.3-407.6-207.7-407.6-550.2C97.2 191.4 288.6 0 523.9 0s426.7 191.4 426.7 426.7c0 342.4-390.9 541.8-407.6 550.2l-19.1 9.5z m0-901.1c-188.2 0-341.3 153.1-341.3 341.3 0 250.3 266.8 420.6 341.3 463.4 74.6-42.7 341.3-213.1 341.3-463.4 0-188.1-153.1-341.3-341.3-341.3z" fill="#dcdbdb"></path><path d="M523.9 533.3c-70.6 0-128-57.4-128-128s57.4-128 128-128 128 57.4 128 128-57.5 128-128 128z m0-170.6c-23.5 0-42.7 19.1-42.7 42.7s19.1 42.7 42.7 42.7c23.5 0 42.7-19.1 42.7-42.7s-19.2-42.7-42.7-42.7z" fill="#dcdbdb"></path></g></svg>               
+                 ${item.location.name}
                </div>   
              
+            
 
-               
                
             </div>
         </div>
 
+       
   
-
   `;
-        }
-
-
-
-
     });
 
+    //showing the data from html lement
     document.getElementById("product").innerHTML = htmlCode;
 });

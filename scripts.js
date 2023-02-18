@@ -17,7 +17,7 @@ const promise = fetchProducts();
 promise.then((data) => {
     let htmlCode = ``;
 
-    //Appling filtering for the people still they are Alive
+    //Apply filtering for the people still they are Alive
     const newItems = data.results.filter((item) => item.status === "Alive");
     //showing data from a new aray object
     newItems.map((item) => {

@@ -1,32 +1,49 @@
-async function fetchProducts() {
+const characterList = document.getElementById("product");
+const searchBar = document.getElementById("searchBar");
+let hpChaeacteres = [];
+
+
+
+const loadCharacters = async() => {
     try {
-        const response = await fetch("https://rickandmortyapi.com/api/character");
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
-        const data = await response.json();
-        //   console.log(data);
-        return data;
-    } catch (error) {
-        console.error(`Could not get products: ${error}`);
+        const res = await fetch("https://rickandmortyapi.com/api/character");
+        hpChaeacteres = await res.json();
+        conditionData(hpChaeacteres);
+    } catch (err) {
+        console.log(err);
     }
+};
+
+
+//display the data first time
+const displayFirst = (newItems) => {
+    display(newItems);
+};
+
+
+//display the data after searchin
+const displaySearch = (characters) => {
+    display(characters);
+};
+
+
+
+//Appling filtering for the people still they are Alive
+const conditionData = (data) => {
+    const newItems = data.results.filter((item) => item.status === "Alive");
+    displayFirst(newItems);
+    hpChaeacteres = newItems;
 }
 
-const promise = fetchProducts();
 
-promise.then((data) => {
+
+const display = (newItems) => {
     let htmlCode = ``;
-
-    //Apply filtering for the people still they are Alive
-    const newItems = data.results.filter((item) => item.status === "Alive");
-    //showing data from a new aray object
     newItems.map((item) => {
         //Adding condition
-        if (item.episode.length < 25) {
-            item.character = "side";
-        } else {
-            item.character = "main";
-        }
+        item.episode.length < 25 ?
+            (item.character = "side") :
+            (item.character = "main");
         //end condition
 
         //showing data
@@ -63,7 +80,35 @@ promise.then((data) => {
   
   `;
     });
+    characterList.innerHTML = htmlCode;
+};
 
-    //showing the data from html lement
-    document.getElementById("product").innerHTML = htmlCode;
+
+
+
+
+
+
+//Adding eventListner for searchBar
+searchBar.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+    const filterCharacter = hpChaeacteres.filter((character) => {
+        return (
+            character.name.toLowerCase().includes(searchString)
+        );
+
+    });
+    displaySearch(filterCharacter);
 });
+
+
+
+
+
+
+
+
+
+
+
+loadCharacters();

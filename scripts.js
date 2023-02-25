@@ -130,5 +130,7 @@ searchBar.addEventListener("keyup", (e) => {
     displaySearch(filterCharacter);
 });
 
-showNumber.innerHTML = `${pageNumber}`;
-loadAPIData(API);
+
+
+showNumber.innerHTML = `${pageNumber}`; //showing page number
+loadAPIData(API); //calling default API

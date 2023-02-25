@@ -1,42 +1,79 @@
 const characterList = document.getElementById("product");
 const searchBar = document.getElementById("searchBar");
-let hpChaeacteres = [];
+const nextBtn = document.getElementById("next");
+const prevbtn = document.getElementById("prev");
+const showNumber = document.getElementById("showNumber");
 
+let mainData = [];
 
+let API = "https://rickandmortyapi.com/api/character"; //API
+let pageNumber = 1;
+let pagePrev = 1;
 
-const loadCharacters = async() => {
+//Adding eventListner for Next Page
+nextBtn.addEventListener("click", (e) => {
+    pageNumber++; //for incrementing page number
+    pagePrev = pageNumber;
+    const URLlink = API + "?page=" + pageNumber;
+
+    if (pageNumber > 42) {
+        console.log("We haven't more than this page..");
+        showNumber.innerHTML = "We haven't more than this page..";
+    } else {
+        loadAPIData(URLlink);
+        showNumber.innerHTML = `${pageNumber}`;
+    }
+});
+
+//Adding eventListner for Previous Page
+prevbtn.addEventListener("click", (e) => {
+    pagePrev--; //for decrementing pageNumber
+    pageNumber = pagePrev;
+    let URLlink = API + "?page=" + pagePrev;
+
+    if (pagePrev < 1) {
+        console.log("We haven't less than this page...");
+        showNumber.innerHTML = "We haven't less than this page...";
+    } else if (pagePrev === 1) {
+        URLlink = API;
+        loadAPIData(URLlink);
+        showNumber.innerHTML = `${pagePrev}`;
+    } else if (pagePrev > 1) {
+        loadAPIData(URLlink);
+        showNumber.innerHTML = `${pagePrev}`;
+    }
+});
+
+//loading Api data
+const loadAPIData = async(URLlink) => {
     try {
-        const res = await fetch("https://rickandmortyapi.com/api/character");
-        hpChaeacteres = await res.json();
-        conditionData(hpChaeacteres);
+        const res = await fetch(URLlink);
+        mainData = await res.json();
+        conditionData(mainData);
+        console.log(mainData);
     } catch (err) {
         console.log(err);
     }
 };
 
+//Appling filtering for the people still they are Alive
+const conditionData = (data) => {
+    const newItems = data.results.filter((item) => item.status === "Alive");
+    displayFirst(newItems);
+    mainData = newItems;
+};
 
 //display the data first time
 const displayFirst = (newItems) => {
     display(newItems);
 };
 
-
 //display the data after searchin
 const displaySearch = (characters) => {
     display(characters);
 };
 
-
-
-//Appling filtering for the people still they are Alive
-const conditionData = (data) => {
-    const newItems = data.results.filter((item) => item.status === "Alive");
-    displayFirst(newItems);
-    hpChaeacteres = newItems;
-}
-
-
-
+//display data on the card
 const display = (newItems) => {
     let htmlCode = ``;
     newItems.map((item) => {
@@ -80,35 +117,18 @@ const display = (newItems) => {
   
   `;
     });
+
     characterList.innerHTML = htmlCode;
 };
 
-
-
-
-
-
-
 //Adding eventListner for searchBar
-searchBar.addEventListener('keyup', (e) => {
+searchBar.addEventListener("keyup", (e) => {
     const searchString = e.target.value.toLowerCase();
-    const filterCharacter = hpChaeacteres.filter((character) => {
-        return (
-            character.name.toLowerCase().includes(searchString)
-        );
-
+    const filterCharacter = mainData.filter((character) => {
+        return character.name.toLowerCase().includes(searchString);
     });
     displaySearch(filterCharacter);
 });
 
-
-
-
-
-
-
-
-
-
-
-loadCharacters();
+showNumber.innerHTML = `${pageNumber}`;
+loadAPIData(API);
